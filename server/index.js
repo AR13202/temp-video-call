@@ -1,8 +1,35 @@
 
 const { Server } = require("socket.io");
+const express = require('express');
+const app = express();
+const server = http.createServer(app);
+// const io = new Server(8000, {
+//   cors: true,
+// });
+const allowedOrigins = ['https://video-call-seven-eta.vercel.app/', 'http://localhost:3000'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 
-const io = new Server(8000, {
-  cors: true,
+const io = new Server(server, {
+  cors: {
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
 });
 
 const emailToSocketIdMap = new Map();
